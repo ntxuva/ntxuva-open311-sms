@@ -138,7 +138,7 @@ function ntxuva_sms_handle() {
 
     // If not, apologize
     else {
-      $reply = "Lamentavelmente, não conseguimos encontrar o seu pedido numero '$request_id'.";
+      $reply = "Lamentavelmente, nao conseguimos encontrar o seu pedido numero '$request_id'.";
       watchdog("ntxuva_sms", "Didn't got response from Open311. URL: '$url' Request: '$request_id' "); // save request for debugging
   }
 
@@ -157,7 +157,7 @@ function ntxuva_sms_handle() {
     $endpoint = variable_get('nxtuva_open311_endpoint', $ntxuva_default_endpoint);
     $url = "http://{$endpoint}requests.json";
 
-    $from_number = $_POST['from_number']."@sms.mz"; // to overcome Mark-a-spot's request for email
+    $from_number = $_POST['from_number'];
 
     // Store information from SMS
     $content = str_word_count($_POST['content'], 1, 'àáãéíóúóèç1234567890-');
@@ -171,7 +171,7 @@ function ntxuva_sms_handle() {
 
     // Validate location
     if(empty($location_result)) {
-      $reply = "Lamentavelmente, não conseguimos introduzir o seu pedido. O seu ponto de recolha não foi reconhecido.";
+      $reply = "Lamentavelmente, nao conseguimos introduzir o seu pedido. O seu ponto de recolha nao foi reconhecido.";
       ntxuva_sms_reply($reply);
       return;
     }
@@ -191,7 +191,7 @@ function ntxuva_sms_handle() {
     // Look for category by SMS code
 
     if(empty($category_result)) {
-      $reply = "Lamentavelmente, não conseguimos introduzir o seu pedido. A categoria não foi reconhecida.";
+      $reply = "Lamentavelmente, nao conseguimos introduzir o seu pedido. A categoria nao foi reconhecida.";
       ntxuva_sms_reply($reply);
       return;
     }
@@ -206,7 +206,7 @@ function ntxuva_sms_handle() {
     // Prepare JSON
 
     $request = array(
-    'email'      => $from_number,
+    'phone'      => $from_number,
     'long'    => $long,
     'lat'       => $lat,
     'description' => $_POST['content'],
@@ -244,7 +244,7 @@ function ntxuva_sms_handle() {
     // If not, apologize
     else {
       watchdog("ntxuva_sms", "Open311: could not create request"); // save request for debugging
-      ntxuva_sms_reply("Lamentavelmente, não conseguimos introduzir o seu pedido, por favor tente mais tarde'.");
+      ntxuva_sms_reply("Lamentavelmente, nao conseguimos introduzir o seu pedido, por favor tente mais tarde'.");
     }
 
     return;
