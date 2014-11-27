@@ -12,7 +12,6 @@ Ntxuva-Open311-SMS handles requests from Telerivet Webhook API, evaluates the da
 Requirements
 -----
 * A content to work as translator: from Location codes to one of lat & long or address_string or address_id (Georeport v2)
-* A content to work as translator: from Problem Code to service_code (Georeport v2)
 * An Open311 Georeport v2 endpoint
 * Telerivet account (ours is working with an Android to provide a local number for users in Maputo to send us SMS)
 
@@ -39,11 +38,11 @@ To-Do
 5. Clean messy code
 6. Include debug flag
 7. Save incoming SMS as content
+8. Provide more options for module config
 
 Requirements
 -----
 * A content to work as translator: from Location codes to one of lat & long or address_string or address_id (Georeport v2)
-* A content to work as translator: from Problem Code to service_code (Georeport v2)
 * An Open311 Georeport v2 endpoint
 * Telerivet account (ours is working with an Android to provide a local number for users in Maputo to send us SMS)
 

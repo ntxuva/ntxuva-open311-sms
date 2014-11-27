@@ -162,11 +162,12 @@ function ntxuva_sms_handle() {
     // Store information from SMS
     $content = str_word_count($_POST['content'], 1, 'àáãéíóúóèç1234567890-');
 
-    $location = $content[0];
+    $location = mb_substr($content[0],0,3); // first three chars of first word are for location
     $location_result = taxonomy_get_term_by_name($location,'points');
 
-    $category = $content[1];
-    $category_result = taxonomy_get_term_by_name($category,'categories');
+    $service_code = mb_substr($content[0],3,2); // last two chars of first word are for category
+    // $category = $content[1];
+    // $category_result = taxonomy_get_term_by_name($category,'categories'); not needed if I use service code
 
 
     // Validate location
@@ -185,10 +186,14 @@ function ntxuva_sms_handle() {
 
       $lat = $loc->field_lat->value();
       $long = $loc->field_long->value();
+      if(!empty($loc->field_address_string)) $address_string = $loc->field_address_string->value();
+
 
     }
 
-    // Look for category by SMS code
+    // not needed if I use service code instead of a SMS handle for category
+
+    /* // Look for category by SMS code
 
     if(empty($category_result)) {
       $reply = "Lamentavelmente, nao conseguimos introduzir o seu pedido. A categoria nao foi reconhecida.";
@@ -201,7 +206,7 @@ function ntxuva_sms_handle() {
 
       $cat = entity_metadata_wrapper('taxonomy_term', $category_result);
       $service_code = $cat->field_service_code->value();
-    }
+    } */
 
     // Prepare JSON
 
@@ -210,7 +215,8 @@ function ntxuva_sms_handle() {
     'long'    => $long,
     'lat'       => $lat,
     'description' => $_POST['content'],
-    'service_code'      => $service_code
+    'service_code'      => $service_code,
+    'address_string'  => $address_string
     );
 
     $options = array(
@@ -236,7 +242,7 @@ function ntxuva_sms_handle() {
     // If error, send verbose message to user.
 
     if (isset($res[0]['service_request_id'])) {
-      $reply = "Obrigado pela sua mensagem! O seu pedido foi guardado com o código: " . $res[0]['service_request_id'];
+      $reply = "Obrigado pela sua mensagem! O seu pedido foi guardado com o codigo: " . $res[0]['service_request_id'];
       ntxuva_sms_reply($reply);
       watchdog("ntxuva_sms", "Open311: New service request succesfully submitted: " .print_r($res,true)); // save request for debugging
     }
