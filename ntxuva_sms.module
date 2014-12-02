@@ -129,17 +129,18 @@ function ntxuva_sms_handle() {
     // If successful, send status
 
     if (isset($res[0]['status'])) {
-      switch($res[0]['status']) {
-        case "open":
+      switch($content[0]) {
+        case "open": {
           $reply = "Obrigado pela sua mensagem! O estado do seu pedido $request_id é: aberto.";
-          break;
+          watchdog("ntxuva_sms", "Got response from Open311: " .print_r($res,true)); // save request for debugging
+        }
         case "closed":
+        {
           $reply = "Obrigado pela sua mensagem! O estado do seu pedido $request_id é: resolvido.";
-          break;
-        default:
-          break;
+          watchdog("ntxuva_sms", "Got response from Open311: " .print_r($res,true)); // save request for debugging
+        }
       }
-      watchdog("ntxuva_sms", "Got response from Open311: " .print_r($res,true)); // save request for debugging
+
     // If not, apologize
     else {
       $reply = "Lamentavelmente, nao conseguimos encontrar o seu pedido numero '$request_id'.";
