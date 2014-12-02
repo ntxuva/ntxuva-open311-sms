@@ -129,9 +129,17 @@ function ntxuva_sms_handle() {
     // If successful, send status
 
     if (isset($res[0]['status'])) {
-      $reply = "Obrigado pela sua mensagem! O estado do seu pedido $request_id é: ". $res[0]['status'];
-      watchdog("ntxuva_sms", "Got response from Open311: " .print_r($res,true)); // save request for debugging
-  }
+      switch($content[0]) {
+        case "open": {
+          $reply = "Obrigado pela sua mensagem! O estado do seu pedido $request_id é: aberto.";
+          watchdog("ntxuva_sms", "Got response from Open311: " .print_r($res,true)); // save request for debugging
+        }
+        case "closed":
+        {
+          $reply = "Obrigado pela sua mensagem! O estado do seu pedido $request_id é: resolvido.";
+          watchdog("ntxuva_sms", "Got response from Open311: " .print_r($res,true)); // save request for debugging
+        }
+      }
 
     // If not, apologize
     else {
@@ -246,7 +254,7 @@ function ntxuva_sms_handle() {
   }
 
 function ntxuva_sms_send_help() {
-  ntxuva_sms_reply("Para inserir um pedido: CODIGO_DE_OCORRENCIA COMENTARIO (OPCIONAL)\nPara consultar o estado de um pedido: ESTADO CODIGO_DE_PEDIDO\nSe tiver dificuldades com o sistema, entre em contacto connosco.");
+  ntxuva_sms_reply("Para inserir um pedido escreva: CODIGO_DE_OCORRENCIA e um comentario opcional. Para consultar o estado do seu pedido: ESTADO CODIGO_DE_PEDIDO\nSe tiver dificuldades com o sistema, entre em contacto connosco.");
 }
 
 function ntxuva_sms_reply($reply) {
